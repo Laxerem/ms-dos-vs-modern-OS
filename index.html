@@ -468,21 +468,18 @@
 
     .terminal-line {
       margin-bottom: 8px;
-      opacity: 0;
-      animation: typeIn 0.5s forwards;
+      opacity: 1;
     }
 
-    .terminal-line:nth-child(1) { animation-delay: 0.5s; }
-    .terminal-line:nth-child(2) { animation-delay: 1s; }
-    .terminal-line:nth-child(3) { animation-delay: 1.5s; }
-    .terminal-line:nth-child(4) { animation-delay: 2s; }
-    .terminal-line:nth-child(5) { animation-delay: 2.5s; }
-    .terminal-line:nth-child(6) { animation-delay: 3s; }
-    .terminal-line:nth-child(7) { animation-delay: 3.5s; }
+    .terminal-line .typing-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid transparent;
+    }
 
-    @keyframes typeIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
+    .terminal-line.typing .typing-text {
+      border-right-color: #00ff00;
     }
 
     .terminal-prompt {
@@ -619,6 +616,212 @@
       color: var(--accent-cyan);
     }
 
+    /* Image Gallery Styles */
+    .image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 60px;
+    }
+
+    .gallery-item {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .gallery-item:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px var(--glow-cyan);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 400px;
+      background: #000;
+    }
+
+    .gallery-caption {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .gallery-caption h4 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 16px;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .gallery-caption p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Featured Image */
+    .featured-image {
+      max-width: 600px;
+      margin: 40px auto;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .featured-image:hover {
+      border-color: var(--accent-orange);
+      box-shadow: 0 12px 40px var(--glow-orange);
+      transform: translateY(-4px);
+    }
+
+    .featured-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      max-height: 500px;
+      background: #000;
+    }
+
+    .featured-caption {
+      padding: 24px;
+      text-align: center;
+      background: var(--bg-card-hover);
+    }
+
+    .featured-caption h3 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 18px;
+      color: var(--accent-orange);
+      margin-bottom: 12px;
+    }
+
+    .featured-caption p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Timeline Content Clickable */
+    .timeline-content {
+      cursor: pointer;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: modalZoom 0.3s ease;
+    }
+
+    @keyframes modalZoom {
+      from {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-image {
+      max-width: 95%;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 50px rgba(0, 212, 170, 0.5);
+      border: 2px solid var(--accent-cyan);
+    }
+
+    .modal-caption {
+      margin-top: 20px;
+      text-align: center;
+      background: var(--bg-card);
+      padding: 16px 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      max-width: 600px;
+    }
+
+    .modal-caption h3 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 20px;
+      color: var(--accent-cyan);
+      margin-bottom: 8px;
+    }
+
+    .modal-caption p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      font-weight: bold;
+      color: var(--text-primary);
+      cursor: pointer;
+      background: var(--bg-card);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+      z-index: 10001;
+    }
+
+    .modal-close:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-dark);
+      border-color: var(--accent-cyan);
+      transform: rotate(90deg);
+    }
+
+    .gallery-item {
+      cursor: pointer;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .nav-links {
@@ -722,6 +925,15 @@
       .hero-prompt {
         font-size: 15px;
       }
+
+      .image-gallery {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .featured-image {
+        margin: 30px 0;
+      }
     }
   </style>
 </head>
@@ -771,6 +983,14 @@
         <p class="section-tag">// История</p>
         <h2 class="section-title">Создание MS-DOS</h2>
         <p class="section-desc">От Quick and Dirty Operating System до мирового стандарта персональных компьютеров</p>
+      </div>
+
+      <div class="featured-image">
+        <img src="images/billgates&pollallen.png" alt="Билл Гейтс и Пол Аллен">
+        <div class="featured-caption">
+          <h3>Билл Гейтс и Пол Аллен</h3>
+          <p>Основатели Microsoft, заключившие одну из самых выгодных сделок в истории технологий</p>
+        </div>
       </div>
 
       <div class="timeline">
@@ -884,14 +1104,48 @@
           <div class="terminal-dot green"></div>
           <span class="terminal-title">MS-DOS 6.22</span>
         </div>
-        <div class="terminal-body">
-          <div class="terminal-line"><span class="terminal-prompt">C:\></span> MEM</div>
-          <div class="terminal-line terminal-output">Memory Type        Total    Used    Free</div>
-          <div class="terminal-line terminal-output">----------------  ------  ------  ------</div>
-          <div class="terminal-line terminal-output">Conventional        640K    89K    551K</div>
-          <div class="terminal-line terminal-output">Upper               155K   155K      0K</div>
-          <div class="terminal-line terminal-output">Extended (XMS)    15360K  1024K  14336K</div>
-          <div class="terminal-line"><span class="terminal-prompt">C:\></span> _</div>
+        <div class="terminal-body" id="terminalBody">
+          <div class="terminal-line" data-text="C:\> MEM"><span class="terminal-prompt">C:\></span> <span class="typing-text"></span></div>
+          <div class="terminal-line terminal-output" data-text="Memory Type        Total    Used    Free"><span class="typing-text"></span></div>
+          <div class="terminal-line terminal-output" data-text="----------------  ------  ------  ------"><span class="typing-text"></span></div>
+          <div class="terminal-line terminal-output" data-text="Conventional        640K    89K    551K"><span class="typing-text"></span></div>
+          <div class="terminal-line terminal-output" data-text="Upper               155K   155K      0K"><span class="typing-text"></span></div>
+          <div class="terminal-line terminal-output" data-text="Extended (XMS)    15360K  1024K  14336K"><span class="typing-text"></span></div>
+          <div class="terminal-line" data-text="C:\> _"><span class="terminal-prompt">C:\></span> <span class="typing-text"></span></div>
+        </div>
+      </div>
+
+      <div class="image-gallery">
+        <div class="gallery-item">
+          <img src="images/ms-dos-computer.png" alt="MS-DOS Компьютер">
+          <div class="gallery-caption">
+            <h4>IBM PC с MS-DOS</h4>
+            <p>Классический персональный компьютер эпохи MS-DOS</p>
+          </div>
+        </div>
+
+        <div class="gallery-item">
+          <img src="images/ms-dos-prompt.png" alt="MS-DOS Командная строка">
+          <div class="gallery-caption">
+            <h4>Командная строка DOS</h4>
+            <p>Легендарный интерфейс C:\> — основной способ взаимодействия с системой</p>
+          </div>
+        </div>
+
+        <div class="gallery-item">
+          <img src="images/ms-dos-window.png" alt="MS-DOS Окно">
+          <div class="gallery-caption">
+            <h4>MS-DOS в окне</h4>
+            <p>Эмуляция DOS в современных операционных системах</p>
+          </div>
+        </div>
+
+        <div class="gallery-item">
+          <img src="images/basic.png" alt="BASIC Programming">
+          <div class="gallery-caption">
+            <h4>Microsoft BASIC</h4>
+            <p>Встроенный интерпретатор BASIC — первый язык программирования для многих</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1050,5 +1304,207 @@
       </div>
     </div>
   </footer>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal">
+    <span class="modal-close">&times;</span>
+    <div class="modal-content">
+      <img class="modal-image" id="modalImage" src="" alt="">
+      <div class="modal-caption">
+        <h3 id="modalTitle"></h3>
+        <p id="modalDescription"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Terminal typing effect with Intersection Observer
+    document.addEventListener('DOMContentLoaded', function() {
+      const terminalBody = document.getElementById('terminalBody');
+      let typingStarted = false;
+
+      // Function to type text character by character
+      function typeText(element, text, speed = 50) {
+        return new Promise((resolve) => {
+          let index = 0;
+          element.textContent = '';
+
+          const typing = setInterval(() => {
+            if (index < text.length) {
+              element.textContent += text.charAt(index);
+              index++;
+            } else {
+              clearInterval(typing);
+              resolve();
+            }
+          }, speed);
+        });
+      }
+
+      // Function to start terminal animation
+      async function startTerminalAnimation() {
+        if (typingStarted) return;
+        typingStarted = true;
+
+        const lines = terminalBody.querySelectorAll('.terminal-line');
+
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
+          const typingElement = line.querySelector('.typing-text');
+          const textToType = line.getAttribute('data-text');
+
+          // Skip if it's a prompt line (first and last)
+          if (line.querySelector('.terminal-prompt')) {
+            const promptText = textToType.replace('C:\\> ', '');
+            line.classList.add('typing');
+            await typeText(typingElement, promptText, 80);
+            line.classList.remove('typing');
+          } else {
+            // For output lines
+            line.classList.add('typing');
+            await typeText(typingElement, textToType, 30);
+            line.classList.remove('typing');
+          }
+
+          // Small delay between lines
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        // Add blinking cursor at the end
+        const lastLine = lines[lines.length - 1];
+        lastLine.classList.add('typing');
+      }
+
+      // Intersection Observer to detect when terminal is visible
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3 // Trigger when 30% of element is visible
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            startTerminalAnimation();
+            observer.unobserve(entry.target); // Run animation only once
+          }
+        });
+      }, observerOptions);
+
+      if (terminalBody) {
+        observer.observe(terminalBody);
+      }
+
+      // Smooth scroll functionality for timeline items
+      const timelineContents = document.querySelectorAll('.timeline-content');
+
+      timelineContents.forEach(content => {
+        content.addEventListener('click', function() {
+          const timelineItem = this.closest('.timeline-item');
+
+          // Scroll to the timeline item with smooth animation
+          timelineItem.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+
+          // Add a subtle visual feedback
+          this.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            this.style.transform = '';
+          }, 200);
+        });
+      });
+
+      // Add keyboard navigation support
+      timelineContents.forEach(content => {
+        content.setAttribute('tabindex', '0');
+        content.setAttribute('role', 'button');
+
+        content.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+
+      // Modal functionality for image gallery
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalDescription = document.getElementById('modalDescription');
+      const closeBtn = document.querySelector('.modal-close');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const featuredImages = document.querySelectorAll('.featured-image');
+
+      // Function to open modal with image data
+      function openModal(imgSrc, imgAlt, title, description) {
+        modalImage.src = imgSrc;
+        modalImage.alt = imgAlt;
+        modalTitle.textContent = title;
+        modalDescription.textContent = description;
+
+        // Trigger animation
+        modal.style.display = 'flex';
+        setTimeout(() => {
+          modal.classList.add('active');
+        }, 10);
+
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+      }
+
+      // Open modal when clicking on gallery item
+      galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const img = this.querySelector('img');
+          const title = this.querySelector('.gallery-caption h4').textContent;
+          const description = this.querySelector('.gallery-caption p').textContent;
+
+          openModal(img.src, img.alt, title, description);
+        });
+      });
+
+      // Open modal when clicking on featured image
+      featuredImages.forEach(item => {
+        item.addEventListener('click', function() {
+          const img = this.querySelector('img');
+          const title = this.querySelector('.featured-caption h3').textContent;
+          const description = this.querySelector('.featured-caption p').textContent;
+
+          openModal(img.src, img.alt, title, description);
+        });
+      });
+
+      // Close modal when clicking X button
+      closeBtn.addEventListener('click', closeModal);
+
+      // Close modal when clicking outside the image
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      // Close modal on ESC key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      function closeModal() {
+        modal.classList.remove('active');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          modalImage.src = '';
+        }, 300);
+
+        // Restore body scroll
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
 </body>
 </html>
