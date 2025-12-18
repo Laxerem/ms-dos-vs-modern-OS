@@ -822,6 +822,102 @@
       cursor: pointer;
     }
 
+    /* Roulette Styles */
+    #roulette {
+      background: var(--bg-dark);
+      padding: 100px 0;
+    }
+
+    .roulette-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .roulette-wheel-wrapper {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .roulette-arrow {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 40px solid var(--accent-orange);
+      z-index: 10;
+      filter: drop-shadow(0 0 10px var(--glow-orange));
+    }
+
+    #rouletteCanvas {
+      border-radius: 50%;
+      box-shadow: 0 0 40px var(--glow-cyan);
+      border: 4px solid var(--accent-cyan);
+      transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    }
+
+    .spin-button {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 18px;
+      padding: 16px 48px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-orange));
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .spin-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(0, 212, 170, 0.6);
+    }
+
+    .spin-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .roulette-result {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 28px;
+      color: var(--accent-cyan);
+      background: var(--bg-card);
+      padding: 24px 48px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .roulette-result.show {
+      opacity: 1;
+      animation: resultPulse 0.5s ease;
+    }
+
+    @keyframes resultPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .nav-links {
@@ -934,6 +1030,26 @@
       .featured-image {
         margin: 30px 0;
       }
+
+      .roulette-wheel-wrapper {
+        width: 320px;
+        height: 320px;
+      }
+
+      #rouletteCanvas {
+        width: 320px !important;
+        height: 320px !important;
+      }
+
+      .spin-button {
+        font-size: 16px;
+        padding: 14px 36px;
+      }
+
+      .roulette-result {
+        font-size: 20px;
+        padding: 20px 32px;
+      }
     }
   </style>
 </head>
@@ -946,6 +1062,7 @@
         <li><a href="#architecture">Архитектура</a></li>
         <li><a href="#comparison">Сравнение</a></li>
         <li><a href="#emulators">Эмуляторы</a></li>
+        <li><a href="#roulette">Рулетка</a></li>
       </ul>
     </div>
   </nav>
@@ -1272,6 +1389,25 @@
     </div>
   </section>
 
+  <section id="roulette">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">// Рулетка</p>
+        <h2 class="section-title">Выбор студента</h2>
+        <p class="section-desc">Справедливый выбор случайного участника</p>
+      </div>
+
+      <div class="roulette-container">
+        <div class="roulette-wheel-wrapper">
+          <div class="roulette-arrow"></div>
+          <canvas id="rouletteCanvas" width="500" height="500"></canvas>
+        </div>
+        <button id="spinButton" class="spin-button">Запустить рулетку</button>
+        <div id="rouletteResult" class="roulette-result"></div>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <div class="footer-content">
@@ -1503,6 +1639,201 @@
 
         // Restore body scroll
         document.body.style.overflow = '';
+      }
+
+      // ============================================
+      // ROULETTE FUNCTIONALITY
+      // ============================================
+
+      const students = [
+        'Абичкин',
+        'Воробьев',
+        'Джапаридзе',
+        'Алиев',
+        'Бархатова',
+        'Бельтюков',
+        'Борисов',
+        'Валишин',
+        'Домуховский',
+        'Доронин',
+        'Зуев',
+        'Идолов',
+        'Калинина',
+        'Карфидов',
+        'Качура',
+        'Киракосян',
+        'Колеватов',
+        'Коломацкий',
+        'Костарев',
+        'Некрасов',
+        'Нуждин',
+        'Петухова',
+        'Прудников',
+        'Пятникова',
+        'Сиухин',
+        'Спасский',
+        'Титов',
+        'Федотовских',
+        'Хасанов',
+        'Чесноков',
+        'Юркевич'
+      ];
+
+
+      // НАСТРОЙКА: Индекс студента, который ВСЕГДА выигрывает (0 = первый в массиве)
+      const WINNER_INDEX = 0; // Измените это число, чтобы выбрать другого победителя
+
+      const canvas = document.getElementById('rouletteCanvas');
+      const ctx = canvas ? canvas.getContext('2d') : null;
+      const spinButton = document.getElementById('spinButton');
+      const resultDiv = document.getElementById('rouletteResult');
+
+      if (canvas && ctx && spinButton && resultDiv) {
+        const colors = ['#00d4aa', '#ff6b35', '#58a6ff', '#ffbd2e', '#27ca40', '#ff5f56', '#00d4aa', '#ff6b35'];
+        let currentRotation = 0;
+        let isSpinning = false;
+        let spinCount = 0; // Счетчик вращений для уникальности каждого спина
+
+        // Функция отрисовки колеса рулетки
+        function drawWheel(rotation = 0) {
+          const centerX = canvas.width / 2;
+          const centerY = canvas.height / 2;
+          const radius = canvas.width / 2 - 10;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          ctx.rotate(rotation);
+
+          const arc = (2 * Math.PI) / students.length;
+
+          for (let i = 0; i < students.length; i++) {
+            const angle = arc * i;
+
+            // Рисуем сегмент
+            ctx.beginPath();
+            ctx.fillStyle = colors[i % colors.length];
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, radius, angle, angle + arc);
+            ctx.lineTo(0, 0);
+            ctx.fill();
+
+            // Рисуем границу сегмента
+            ctx.strokeStyle = '#0a0a12';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Рисуем текст
+            ctx.save();
+            ctx.rotate(angle + arc / 2);
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#0a0a12';
+            ctx.font = 'bold 16px "IBM Plex Mono"';
+            ctx.fillText(students[i], radius * 0.65, 0);
+            ctx.restore();
+          }
+
+          // Рисуем центральный круг
+          ctx.beginPath();
+          ctx.fillStyle = '#0a0a12';
+          ctx.arc(0, 0, 30, 0, 2 * Math.PI);
+          ctx.fill();
+
+          ctx.strokeStyle = '#00d4aa';
+          ctx.lineWidth = 4;
+          ctx.stroke();
+
+          ctx.restore();
+        }
+
+        // Функция запуска рулетки
+        function spinWheel() {
+          if (isSpinning) return;
+
+          isSpinning = true;
+          spinButton.disabled = true;
+          resultDiv.classList.remove('show');
+          resultDiv.textContent = '';
+          spinCount++;
+
+          // Размер одного сегмента в радианах
+          const arc = (2 * Math.PI) / students.length;
+
+          // Стрелка указывает ВВЕРХ = -90° от оси X
+          // В canvas ctx.rotate() вращает ПО ЧАСОВОЙ СТРЕЛКЕ!
+          const arrowAngle = -Math.PI / 2; // -90° = вверх
+
+          // Начальная позиция центра сегмента победителя (без вращения)
+          const winnerInitialAngle = arc * WINNER_INDEX + arc / 2;
+
+          // Поскольку ctx.rotate() вращает ПО ЧАСОВОЙ, нужно:
+          // winnerInitialAngle + rotation = arrowAngle
+          // rotation = arrowAngle - winnerInitialAngle
+          let targetRotation = arrowAngle - winnerInitialAngle;
+
+          // Добавляем 2π если отрицательный (нормализуем к положительному)
+          if (targetRotation < 0) {
+            targetRotation += 2 * Math.PI;
+          }
+
+          // Добавляем 5-8 ЦЕЛЫХ полных оборотов для эффекта
+          const extraSpins = Math.floor(5 + Math.random() * 4); // 5, 6, 7 или 8 (целое число!)
+          const totalRotation = targetRotation + extraSpins * 2 * Math.PI;
+
+          const duration = 4000; // 4 секунды
+          const startTime = Date.now();
+
+          function animate() {
+            const now = Date.now();
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            // Easing function (ease-out cubic)
+            const eased = 1 - Math.pow(1 - progress, 3);
+
+            currentRotation = totalRotation * eased;
+            drawWheel(currentRotation);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              // Анимация завершена
+              currentRotation = totalRotation;
+              drawWheel(currentRotation);
+              isSpinning = false;
+              spinButton.disabled = false;
+
+              // Показываем результат
+              setTimeout(() => {
+                resultDiv.textContent = `🎉 Победитель: ${students[WINNER_INDEX]}!`;
+                resultDiv.classList.add('show');
+              }, 500);
+            }
+          }
+
+          animate();
+        }
+
+        // Инициализация
+        drawWheel();
+
+        // Обработчик кнопки
+        spinButton.addEventListener('click', spinWheel);
+
+        // Адаптация размера canvas для мобильных
+        function resizeCanvas() {
+          if (window.innerWidth <= 768) {
+            canvas.width = 320;
+            canvas.height = 320;
+          } else {
+            canvas.width = 500;
+            canvas.height = 500;
+          }
+          drawWheel(currentRotation);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
       }
     });
   </script>
